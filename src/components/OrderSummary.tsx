@@ -12,6 +12,7 @@ import {
   Grid,
   ScrollArea,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconExclamationCircle,
@@ -19,7 +20,47 @@ import {
   IconTicket,
 } from "@tabler/icons-react";
 
+import useCampaigns, { Campaign, CampaignType } from "@/hooks/useCampaigns";
+import useCart from "@/hooks/useCart";
+
 const OrderSummary = () => {
+  const { other } = useMantineTheme();
+  const { cartItems, clearCart } = useCart();
+  const {
+    campaigns,
+    selectedCampaigns,
+    handleSelectCampaign,
+    subTotal,
+    totalPrice,
+    couponDiscount,
+    onTopDiscount,
+    handleClearCampaign,
+  } = useCampaigns({ cartItems });
+
+  const getCampaignStyleByType = (type: CampaignType) => {
+    switch (type) {
+      case "Coupon":
+        return {
+          icon: <IconTicket color={other.couponColor} />,
+          iconColor: other.couponColor,
+          bgColor: other.couponBgColor,
+        };
+      case "OnTop":
+        return {
+          icon: <IconRosetteDiscount color={other.onTopColor} />,
+          iconColor: other.onTopColor,
+          bgColor: other.onTopBgColor,
+        };
+
+      default:
+        return {
+          icon: <IconTicket color={other.couponColor} />,
+          iconColor: other.couponColor,
+          bgColor: other.couponBgColor,
+        };
+    }
+  };
+
   return (
     <Paper w="100%" withBorder radius={16} p={16}>
       <Flex direction="column" justify="space-between" h="100%" gap={16}>
@@ -34,30 +75,35 @@ const OrderSummary = () => {
                 Subtotal
               </Text>
               <Text fz={20} fw={600}>
-                ฿350
+                ฿{subTotal.toFixed(2)}
               </Text>
             </Group>
-            <Group justify="space-between">
-              <Text c="gray">Discount (Discount 50 THB)</Text>
-              <Text c="gray">-฿350</Text>
-            </Group>
-            <Group justify="space-between">
-              <Text c="gray">Discount (15% Off on Clothing)</Text>
-              <Text c="gray">-฿350</Text>
-            </Group>
+            {/* Discount */}
+            {selectedCampaigns.Coupon && (
+              <Group justify="space-between">
+                <Text c="gray">{selectedCampaigns.Coupon.discountText}</Text>
+                <Text c="gray">-฿{couponDiscount.toFixed(2)}</Text>
+              </Group>
+            )}
+            {selectedCampaigns.OnTop && (
+              <Group justify="space-between">
+                <Text c="gray">{selectedCampaigns.OnTop.discountText}</Text>
+                <Text c="gray">-฿{onTopDiscount.toFixed(2)}</Text>
+              </Group>
+            )}
           </Stack>
         </Stack>
 
+        {/* Select Campaign */}
         <Flex direction="column">
           <Divider />
           <Accordion defaultValue="Campaigns">
             <Accordion.Item value="Campaigns">
-              <Accordion.Control p={0}>
+              <Accordion.Control>
                 <Group gap={4} align="center">
                   <Text fw={600}>Campaigns</Text>
                   <Tooltip
                     offset={6}
-                    color="white"
                     label={
                       <Stack gap={4}>
                         <Grid>
@@ -78,7 +124,7 @@ const OrderSummary = () => {
                           <Grid.Col span="auto">
                             <Text fz={12} c="gray">
                               Discounts are applied in the following order:
-                              Coupon → On Top → Seasonal.
+                              Coupon → On Top
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -91,107 +137,76 @@ const OrderSummary = () => {
               </Accordion.Control>
               <Accordion.Panel>
                 <Flex direction="column">
-                  <ScrollArea h={200} scrollbars="y" type="always">
-                    <Stack gap={8}>
-                      <Paper
-                        withBorder
-                        display="flex"
-                        dir="column"
-                        radius="md"
-                        style={{ overflow: "hidden" }}
-                      >
-                        <Group
-                          w="200px"
-                          mih="60px"
-                          p={8}
-                          align="center"
-                          style={{
-                            backgroundColor: "#EBFFF4",
-                          }}
-                          gap={8}
+                  <ScrollArea
+                    h={220}
+                    scrollbars="y"
+                    type="always"
+                    scrollbarSize={7}
+                  >
+                    <Stack mb={8} gap={8}>
+                      {campaigns.map((campaign: Campaign) => (
+                        <Paper
+                          key={campaign.id}
+                          withBorder
+                          display="flex"
+                          dir="column"
+                          radius={8}
                         >
-                          <IconTicket color="#219538" />
-                          <Text c="#219538" fw={700}>
-                            Coupon
-                          </Text>
-                        </Group>
-                        <Group px="sm" w="100%" justify="space-between">
-                          <Text>Discount ฿50</Text>
-                          <Button
-                            size="compact-sm"
-                            variant="light"
-                            color="green"
+                          <Group
+                            w="200px"
+                            mih="60px"
+                            p={8}
+                            align="center"
+                            style={{
+                              backgroundColor: getCampaignStyleByType(
+                                campaign.type
+                              ).bgColor,
+                            }}
+                            gap={8}
                           >
-                            use
-                          </Button>
-                        </Group>
-                      </Paper>
-                      <Paper
-                        withBorder
-                        display="flex"
-                        dir="column"
-                        radius="md"
-                        style={{ overflow: "hidden" }}
-                      >
-                        <Group
-                          w="200px"
-                          mih="60px"
-                          p={8}
-                          align="center"
-                          style={{
-                            backgroundColor: "#EBFFF4",
-                          }}
-                          gap={8}
-                        >
-                          <IconTicket color="#219538" />
-                          <Text c="#219538" fw={700}>
-                            Coupon
-                          </Text>
-                        </Group>
-                        <Group px="sm" w="100%" justify="space-between">
-                          <Text>Discount ฿50</Text>
-                          <Button
-                            size="compact-sm"
-                            variant="light"
-                            color="green"
+                            {getCampaignStyleByType(campaign.type).icon}
+                            <Text
+                              c={
+                                getCampaignStyleByType(campaign.type).iconColor
+                              }
+                              fw={700}
+                            >
+                              {campaign.typeText}
+                            </Text>
+                          </Group>
+                          <Group
+                            py={8}
+                            px={12}
+                            w="100%"
+                            justify="space-between"
                           >
-                            use
-                          </Button>
-                        </Group>
-                      </Paper>
-                      <Paper
-                        withBorder
-                        display="flex"
-                        dir="column"
-                        radius="md"
-                        style={{ overflow: "hidden" }}
-                      >
-                        <Group
-                          w="200px"
-                          mih="60px"
-                          p={8}
-                          align="center"
-                          style={{
-                            backgroundColor: "#FFFBEB",
-                          }}
-                          gap={8}
-                        >
-                          <IconRosetteDiscount color="#FEBA00" />
-                          <Text c="#FEBA00" fw={700}>
-                            On Top
-                          </Text>
-                        </Group>
-                        <Group px="sm" w="100%" justify="space-between">
-                          <Text>Discount ฿50</Text>
-                          <Button
-                            size="compact-sm"
-                            variant="light"
-                            color="green"
-                          >
-                            use
-                          </Button>
-                        </Group>
-                      </Paper>
+                            <Text fz={14}>{campaign.discountText}</Text>
+                            <Button
+                              disabled={campaign.disabled}
+                              radius={4}
+                              size="compact-sm"
+                              variant={
+                                selectedCampaigns[campaign.type]?.id ===
+                                campaign.id
+                                  ? "subtle"
+                                  : "light"
+                              }
+                              color={
+                                selectedCampaigns[campaign.type]?.id ===
+                                campaign.id
+                                  ? "red"
+                                  : "green"
+                              }
+                              onClick={() => handleSelectCampaign(campaign)}
+                            >
+                              {selectedCampaigns[campaign.type]?.id ===
+                              campaign.id
+                                ? "cancel"
+                                : "use"}
+                            </Button>
+                          </Group>
+                        </Paper>
+                      ))}
                     </Stack>
                   </ScrollArea>
                 </Flex>
@@ -199,17 +214,27 @@ const OrderSummary = () => {
             </Accordion.Item>
           </Accordion>
         </Flex>
+
         <Stack>
           <Group justify="space-between">
             <Text fz={20} fw={600}>
               Total
             </Text>
             <Text fz={20} fw={600}>
-              ฿50
+              ฿{totalPrice.toFixed(2)}
             </Text>
           </Group>
-          <Button radius={12} size="lg" fullWidth color="green">
-            Check out
+          <Button
+            radius={12}
+            size="lg"
+            fullWidth
+            color="green"
+            onClick={() => {
+              handleClearCampaign();
+              clearCart();
+            }}
+          >
+            Checkout
           </Button>
         </Stack>
       </Flex>

@@ -43,8 +43,6 @@ const theme = createTheme({
     couponBgColor: "#EBFFF4",
     onTopColor: "#FEBA00",
     onTopBgColor: "#FFFBEB",
-    seasonalColor: "#FF4F60",
-    seasonalBgColor: "#FFEBED",
   },
 });
 
