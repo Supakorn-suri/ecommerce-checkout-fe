@@ -2,7 +2,8 @@
 import { Carousel } from "@mantine/carousel";
 import { Button, Card, Flex, Group, Text, Image, Title } from "@mantine/core";
 
-// mock items
+import useCart from "@/hooks/useCart";
+
 type CartItem = {
   id: string;
   name: string;
@@ -78,6 +79,8 @@ const cartItems: CartItem[] = [
 ];
 
 const RecommendedProducts = () => {
+  const { addCartItem } = useCart();
+
   return (
     <Flex direction="column" gap={24}>
       <Title order={3}>Recommended Products</Title>
@@ -88,11 +91,11 @@ const RecommendedProducts = () => {
       >
         {cartItems.map((item) => (
           <Carousel.Slide key={item.id}>
-            <Card shadow="sm" padding={12} radius={16} withBorder>
+            <Card padding={12} radius={16} withBorder>
               <Card.Section>
                 <Image
                   src={item.image}
-                  h={220}
+                  h={180}
                   miw={180}
                   maw="auto"
                   fit="cover"
@@ -101,9 +104,15 @@ const RecommendedProducts = () => {
               </Card.Section>
               <Group justify="space-between" my={8}>
                 <Text fw={500}>{item.name}</Text>
-                <Text>{item.price} THB</Text>
+                <Text>{item.price}</Text>
               </Group>
-              <Button color="dark" fullWidth mt="md" radius="md">
+              <Button
+                color="dark"
+                fullWidth
+                mt="md"
+                radius="md"
+                onClick={() => addCartItem(item)}
+              >
                 Quick Add
               </Button>
             </Card>
