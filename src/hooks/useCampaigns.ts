@@ -110,14 +110,14 @@ export default function useCampaigns({ cartItems }: UseCampaignsProps) {
     return { couponDiscount, onTopDiscount };
   }, [selectedCampaigns, subTotal, cartItems]);
 
-  const { couponDiscount, onTopDiscount } =
-    calculateDiscounts();
+  const { couponDiscount, onTopDiscount } = calculateDiscounts();
 
-  const totalDiscount = couponDiscount + onTopDiscount ;
+  const totalDiscount = couponDiscount + onTopDiscount;
   const totalPrice = subTotal - totalDiscount;
 
   const isCampaignDisabled = useCallback(
     (campaign: Campaign): boolean => {
+      if (cartItems.length === 0) return true;
       switch (campaign.type) {
         case "OnTop":
           switch (campaign.id) {

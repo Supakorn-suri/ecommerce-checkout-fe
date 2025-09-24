@@ -235,6 +235,7 @@ const OrderSummary = () => {
             size="lg"
             fullWidth
             color="green"
+            disabled={cartItems.length === 0}
             onClick={() => {
               handleClearCampaign();
               clearCart();
