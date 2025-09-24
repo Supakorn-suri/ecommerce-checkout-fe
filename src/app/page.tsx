@@ -3,6 +3,7 @@ import { Container, Flex, Box } from "@mantine/core";
 
 import TopBar from "@/components/TopBar";
 import RecommendedProducts from "@/components/RecommendedProducts";
+import CustomerCart from "@/components/Cart";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
         <TopBar />
         <Box>
           Content
-          <Box>{/* Cart  */}</Box>
+          <CustomerCart />
           <Box>{/* Checkout */}</Box>
         </Box>
         <RecommendedProducts />
