@@ -14,10 +14,12 @@ import {
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import {
   IconExclamationCircle,
   IconRosetteDiscount,
   IconTicket,
+  IconCheck,
 } from "@tabler/icons-react";
 
 import useCampaigns, { Campaign, CampaignType } from "@/hooks/useCampaigns";
@@ -232,6 +234,15 @@ const OrderSummary = () => {
             onClick={() => {
               handleClearCampaign();
               clearCart();
+              notifications.show({
+                title: "Order Successfully",
+                message:
+                  "Please fill in your shipping address on the next page.",
+                color: "teal",
+                autoClose: 5000,
+                icon: <IconCheck size={16} />,
+                withBorder: true,
+              });
             }}
           >
             Checkout

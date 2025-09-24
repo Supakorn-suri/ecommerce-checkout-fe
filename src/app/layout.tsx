@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
+import "@mantine/notifications/styles.css";
 import {
   ColorSchemeScript,
   createTheme,
   mantineHtmlProps,
   MantineProvider,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 const theme = createTheme({
   defaultRadius: 8,
@@ -62,7 +64,10 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <Notifications position="top-center" />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
