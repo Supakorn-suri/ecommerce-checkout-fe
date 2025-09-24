@@ -11,6 +11,7 @@ import {
   ActionIcon,
   Grid,
   ScrollArea,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconTrashX } from "@tabler/icons-react";
 
@@ -18,6 +19,7 @@ import useCart from "@/hooks/useCart";
 import { CartItem } from "@/contexts";
 
 const CustomerCart = () => {
+  const theme = useMantineTheme();
   const { cartItems, removeCartItem, updateQuantity } = useCart();
 
   return (
@@ -28,7 +30,10 @@ const CustomerCart = () => {
           <Grid
             key={item.id}
             py={16}
-            style={{ borderBottom: "1px solid #D1D1D1", paddingBottom: 24 }}
+            style={{
+              borderBottom: `1px solid ${theme.other.borderColor}`,
+              paddingBottom: 24,
+            }}
           >
             <Grid.Col span="content">
               <Image
@@ -47,15 +52,15 @@ const CustomerCart = () => {
                     {item.name}
                   </Text>
                   <Text fw={600} fz={18}>
-                    ฿{item.price}
+                    ฿{item.price * item.quantity}
                   </Text>
                 </Group>
                 <Text>Category: {item.category}</Text>
-                <Group>
+                <Group gap={4}>
                   <Text>Quantity: </Text>
                   <NumberInput
                     value={item.quantity}
-                    maw={100}
+                    maw={80}
                     min={1}
                     allowDecimal={false}
                     placeholder="Quantity"

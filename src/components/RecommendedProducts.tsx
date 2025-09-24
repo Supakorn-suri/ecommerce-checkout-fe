@@ -3,15 +3,8 @@ import { Carousel } from "@mantine/carousel";
 import { Button, Card, Flex, Group, Text, Image, Title } from "@mantine/core";
 
 import useCart from "@/hooks/useCart";
+import { CartItem } from '@/contexts/CartContext';
 
-type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  category: "Clothing" | "Accessories" | "Electronics";
-  image: string;
-};
 const cartItems: CartItem[] = [
   {
     id: "item-1",
@@ -104,7 +97,7 @@ const RecommendedProducts = () => {
               </Card.Section>
               <Group justify="space-between" my={8}>
                 <Text fw={500}>{item.name}</Text>
-                <Text>{item.price}</Text>
+                <Text>฿{item.price}</Text>
               </Group>
               <Button
                 color="dark"

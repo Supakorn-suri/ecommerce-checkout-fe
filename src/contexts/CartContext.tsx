@@ -1,11 +1,13 @@
 import React, { createContext, useState } from "react";
 
+export type CategoryType = "Clothing" | "Accessories";
+
 export type CartItem = {
   id: string;
   name: string;
   price: number;
   quantity: number;
-  category: "Clothing" | "Accessories" | "Electronics";
+  category: CategoryType;
   image: string;
 };
 
@@ -35,6 +37,7 @@ export type CartContextType = {
   addCartItem: (product: CartItem) => void;
   removeCartItem: (productId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
+  clearCart: () => void;
 };
 
 export const CartContext = createContext<CartContextType>({
@@ -42,21 +45,26 @@ export const CartContext = createContext<CartContextType>({
   addCartItem: () => {},
   removeCartItem: () => {},
   updateQuantity: () => {},
+  clearCart: () => {},
 });
 
 const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(defaultCartItems);
 
   const addCartItem = (item: CartItem) => {
-    const matchingCartItem: CartItem | undefined = cartItems.find(
+    const matchingCartItem = cartItems.find(
       (cartItem: CartItem) => cartItem.id === item.id
     );
     if (matchingCartItem) {
-      matchingCartItem.quantity += 1;
+      const updated = cartItems.map((cartItem: CartItem) =>
+        cartItem.id === item.id
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      );
+      setCartItems(updated);
     } else {
-      cartItems.push(item);
+      setCartItems([...cartItems, item]);
     }
-    setCartItems([...cartItems]);
   };
 
   const removeCartItem = (itemId: string) => {
@@ -77,6 +85,10 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCartItems([...cartItems]);
   };
 
+  const clearCart = () => {
+    setCartItems(defaultCartItems);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -84,6 +96,7 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
         addCartItem,
         removeCartItem,
         updateQuantity,
+        clearCart,
       }}
     >
       {children}

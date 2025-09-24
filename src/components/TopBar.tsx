@@ -1,11 +1,12 @@
-import { Avatar, Flex, Group, Title } from "@mantine/core";
+import { Avatar, Flex, Group, Title, useMantineTheme } from "@mantine/core";
 import { IconShoppingBag, IconShoppingCart } from "@tabler/icons-react";
 import React from "react";
 
 const TopBar = () => {
+  const theme = useMantineTheme();
   return (
     <Flex
-      style={{ borderBottom: "1px solid #ccc" }}
+      style={{ borderBottom: `1px solid ${theme.other.borderColor}` }}
       px={16}
       pb={16}
       mb={16}

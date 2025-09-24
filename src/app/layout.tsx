@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
-import '@mantine/carousel/styles.css';
+import "@mantine/carousel/styles.css";
 import {
   ColorSchemeScript,
   createTheme,
@@ -9,7 +9,43 @@ import {
 } from "@mantine/core";
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+  defaultRadius: 8,
+  components: {
+    Accordion: {
+      styles: {
+        content: {
+          padding: "0px",
+        },
+        control: {
+          padding: "0px",
+        },
+      },
+    },
+    Tooltip: {
+      styles: {
+        tooltip: {
+          border: "1px solid #DEE2E6",
+          backgroundColor: "white",
+        },
+      },
+    },
+    Paper: {
+      styles: {
+        root: {
+          overflow: "hidden",
+        },
+      },
+    },
+  },
+  other: {
+    borderColor: "#DEE2E6",
+    couponColor: "#219538",
+    couponBgColor: "#EBFFF4",
+    onTopColor: "#FEBA00",
+    onTopBgColor: "#FFFBEB",
+    seasonalColor: "#FF4F60",
+    seasonalBgColor: "#FFEBED",
+  },
 });
 
 export const metadata: Metadata = {
