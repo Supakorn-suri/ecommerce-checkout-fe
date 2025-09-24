@@ -13,6 +13,7 @@ import {
   ScrollArea,
   Tooltip,
   useMantineTheme,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
@@ -27,6 +28,8 @@ import useCart from "@/hooks/useCart";
 
 const OrderSummary = () => {
   const { other } = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+
   const { cartItems, clearCart } = useCart();
   const {
     campaigns,
@@ -105,6 +108,7 @@ const OrderSummary = () => {
                 <Group gap={4} align="center">
                   <Text fw={600}>Campaigns</Text>
                   <Tooltip
+                    color={colorScheme != "light" ? "dark" : "white"}
                     offset={6}
                     label={
                       <Stack gap={4}>

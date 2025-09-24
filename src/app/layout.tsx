@@ -27,7 +27,6 @@ const theme = createTheme({
       styles: {
         tooltip: {
           border: "1px solid #DEE2E6",
-          backgroundColor: "white",
         },
       },
     },
